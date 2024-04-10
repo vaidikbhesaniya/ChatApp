@@ -6,7 +6,6 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL,
     "profilePicture" TEXT,
     "bio" TEXT,
-    "token" TEXT,
     "verified" BOOLEAN NOT NULL DEFAULT false,
     "role" TEXT NOT NULL DEFAULT 'USER',
 
@@ -17,24 +16,16 @@ CREATE TABLE "User" (
 CREATE TABLE "otp" (
     "id" SERIAL NOT NULL,
     "otp" TEXT NOT NULL,
+    "verified" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
     "email" TEXT NOT NULL,
 
     CONSTRAINT "otp_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "Chat" (
-    "id" SERIAL NOT NULL,
-    "userId" INTEGER NOT NULL,
-    "type" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Chat_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
--- AddForeignKey
-ALTER TABLE "Chat" ADD CONSTRAINT "Chat_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- CreateIndex
+CREATE UNIQUE INDEX "otp_email_key" ON "otp"("email");

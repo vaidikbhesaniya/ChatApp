@@ -13,5 +13,15 @@ export function generateJWT(payload: any): string {
 
 export function verifyJWT(token: string) {
   const SECRET_KEY = process.env.SECRET_KEY || "";
-  return verify(token, SECRET_KEY);
+
+  const decodedToken = verify(token, SECRET_KEY);
+  if (
+    !decodedToken ||
+    typeof decodedToken !== "object" ||
+    !decodedToken.payload
+  ) {
+    return { status: 400, message: "Invalid Token" };
+  }
+
+  return { status: 200, payload: decodedToken.payload };
 }
