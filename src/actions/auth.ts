@@ -6,8 +6,6 @@ import SMTPTransport from "nodemailer/lib/smtp-transport";
 import otpGenerator from "otp-generator";
 
 export async function registerUser(email: string, password: string) {
-  await prisma.user.deleteMany();
-
   await prisma.user.create({
     data: {
       email,

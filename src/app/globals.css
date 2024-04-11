@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.authBackground {
+  min-width: 100%;
+  min-height: 100vh;
+  background: url("../assets/AuthBG.png");
+  background-position: center;
+}
+
+.inputContainer {
+  box-shadow: 0 0 0 2px transparent, 0 0 0 5px transparent;
+}
+
+.inputContainer:focus-within {
+  box-shadow: 0 0 0 2px #74c0fc, 0 0 0 5px #74c0fc;
+  border: 0;
+}

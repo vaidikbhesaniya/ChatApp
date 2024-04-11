@@ -1,8 +1,15 @@
-export default async function Page(){
+import Link from "next/link";
+import React from "react"
 
+export default function Page(): React.ReactNode {
   return (
     <div>
-      <button>Click</button>
+      <Link href="/register">
+        Register
+      </Link>
+      <Link href="/login">
+        Login
+      </Link>
     </div>
   )
 }
