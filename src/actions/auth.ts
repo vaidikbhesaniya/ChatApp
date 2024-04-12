@@ -1,8 +1,8 @@
 "use server";
 
+import { createRegistrationOTP } from "@/actions/otp";
 import prisma from "@/db";
-import nodemailer from "nodemailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
+import sendOTP from "@/utils/emailUtils";
 import otpGenerator from "otp-generator";
 
 export async function registerUser(email: string, password: string) {
@@ -45,67 +45,18 @@ export async function sendMail(email: string) {
     process.env.SMTP_USER &&
     process.env.SMTP_PASS
   ) {
-    // Configure Transporter
-    const transporter: nodemailer.Transporter<SMTPTransport.SentMessageInfo> =
-      nodemailer.createTransport({
-        service: "gmail",
-        host: process.env.SMTP_HOST,
-        port: Number(process.env.SMTP_PORT),
-        secure: true,
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
-      });
-
-    // Mail Options
-    const mailOptions = {
-      from: process.env.USER,
-      to: email,
-      subject: "Email Verification",
-      html: `<h1>${otp}</h1>`,
-    };
-
     try {
-      // Send Mail
-      const mailResponse: SMTPTransport.SentMessageInfo =
-        await transporter.sendMail(mailOptions);
+      // Send Verification OTP
+      const { mailResponse } = await sendOTP(email, otp);
 
       // Create/Update OTP in the DB
       if (mailResponse.accepted) {
         // Create OTP with userId as Foreign Key
-        const expiresAt = new Date(new Date().getTime() + 5 * 60 * 1000);
-        const existingOTP = await prisma.otp.findFirst({
-          where: {
-            email,
-          },
-        });
-
-        let newOTP;
-
-        if (existingOTP) {
-          newOTP = await prisma.otp.update({
-            data: {
-              otp,
-              expiresAt,
-            },
-            where: {
-              id: existingOTP.id,
-            },
-          });
-        } else {
-          newOTP = await prisma.otp.create({
-            data: {
-              otp,
-              expiresAt,
-              email,
-            },
-          });
-        }
+        const otpId = await createRegistrationOTP(otp, email);
         return {
           status: 200,
           message: "OTP Sent Successfully",
-          otpId: newOTP.id,
+          otpId,
         };
       }
     } catch (error) {

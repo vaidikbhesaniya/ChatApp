@@ -3,7 +3,45 @@
 @tailwind utilities;
 
 .authBackground {
-  background: url("../assets/AuthBG.png");
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background-position: center;
+}
+
+.authBackground::before,
+.authBackground::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("../assets/AuthBG.png");
+  animation: scrollBackground 60s linear infinite;
+  z-index: -1;
+}
+
+.authBackground::before {
+  left: 0;
+  transform-origin: right;
+}
+
+.authBackground::after {
+  left: 100%;
+}
+
+.authContainer {
+  @apply bg-[#F2F2F2] h-screen w-full lg:h-auto lg:w-auto flex flex-col items-center justify-center gap-[1rem] lg:p-[2rem] lg:rounded-[10px] z-10;
+}
+
+@keyframes scrollBackground {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 .inputContainer {
@@ -11,6 +49,10 @@
 }
 
 .inputContainer:focus-within {
-  box-shadow: 0 0 0 2px #74c0fc, 0 0 0 5px #74c0fc;
+  box-shadow: 0 0 0 2px #74c0fc, 0 0 0 3px #74c0fc;
   border: 0;
+}
+
+.button {
+  @apply bg-[#ffd438] p-[1rem] lg:py-[0.5rem] rounded-[10px] text-[#2F2F2F] uppercase font-semibold tracking-[3px] text-[1.5rem] lg:text-[1.1rem] border-[2px] border-[#2F2F2F] shadow-[0_5px_0_0_#2F2F2F] hover:bg-[#fab005] outline-none mb-[10px];
 }

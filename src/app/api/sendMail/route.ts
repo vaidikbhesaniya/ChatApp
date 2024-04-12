@@ -26,10 +26,10 @@ export async function POST(request: NextRequest) {
   // Send Mail
   const mailResponse = await sendMail(email);
 
-  if (mailResponse.status !== 200) {
+  if (!mailResponse.otpId) {
     return NextResponse.json({
-      status: 500,
-      message: "Internal Server Error",
+      status: mailResponse.status,
+      message: mailResponse.message,
     });
   }
 

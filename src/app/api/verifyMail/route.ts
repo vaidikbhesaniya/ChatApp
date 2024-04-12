@@ -20,9 +20,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(decodedUserDoc.message);
   }
 
-  const existingOTP = await prisma.otp.findUnique({
+  const existingOTP = await prisma.otp.findFirst({
     where: {
-      id: decodedUserDoc.payload.otpId,
+      id: decodedUserDoc.payload.otpId.otpId,
     },
   });
 

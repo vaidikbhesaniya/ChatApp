@@ -1,7 +1,6 @@
 import Link from "next/link";
-import React from "react"
 
-export default function Page(): React.ReactNode {
+export default async function Page() {
   return (
     <div>
       <Link href="/register">

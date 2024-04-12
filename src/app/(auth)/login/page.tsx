@@ -23,11 +23,11 @@ export default function Login(): React.ReactNode {
   }
 
   return (
-    <div className='text-[#2F2F2F] lg:h-screen lg:w-screen lg:flex lg:justify-center lg:items-center lg:bg-center'>
-      <div className="bg-[#F2F2F2] h-screen w-full lg:h-auto lg:w-auto flex flex-col items-center justify-center gap-[1rem] lg:gap-[0.7rem] lg:p-[2rem] lg:rounded-[10px]">
+    <div className='text-[#2F2F2F] lg:h-screen lg:w-screen lg:flex lg:justify-center lg:items-center lg:bg-center authBackground'>
+      <div className="authContainer">
         <span className='text-center text-[#fab005] uppercase text-[1.5rem] lg:text-[0.8rem] tracking-[3px] font-semibold'>welcome back</span>
         <span className='text-center capitalize text-[1.8rem] lg:text-[1.3rem] font-bold'>Sign In to Your Account</span>
-        <form className='flex flex-col gap-[1.5rem] lg:gap-[1rem] w-[90%] lg:w-[100%]' onSubmit={handleLogin}>
+        <form className='flex flex-col gap-[1.5rem] lg:gap-[1rem] w-[90%]' onSubmit={handleLogin}>
           <AuthInput
             type="email"
             placeholder='Email'
@@ -45,7 +45,7 @@ export default function Login(): React.ReactNode {
           <Link href="/forgotPassword" className='text-[#287ac3] hover:text-[#2aa3ff] text-center'>Forgot your password?</Link>
           <button
             type="submit"
-            className='bg-[#ffd438] p-[1rem] lg:py-[0.5rem] rounded-[10px] text-[#2F2F2F] uppercase font-semibold tracking-[3px] text-[1.5rem] border-[2px] border-[#2F2F2F] shadow-[0_5px_0_0_#2F2F2F] hover:bg-[#fab005] outline-none mb-[10px]'
+            className='button'
           >login
           </button>
         </form>
