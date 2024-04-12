@@ -2,19 +2,36 @@
 
 import prisma from "@/db";
 
-export async function createRegistrationOTP(otp: string, email: string) {
+export async function createOTP(
+  otp: string,
+  email: string,
+  forgotPassword?: boolean
+) {
   const expiresAt = new Date(new Date().getTime() + 5 * 60 * 1000);
   const existingOTP = await prisma.otp.findFirst({ where: { email } });
 
   let newOTP;
 
   if (existingOTP) {
-    newOTP = await prisma.otp.update({
-      data: { otp, expiresAt },
-      where: { id: existingOTP.id },
-    });
+    if (forgotPassword) {
+      newOTP = await prisma.otp.update({
+        data: { otp, verified: false, expiresAt, forget: true },
+        where: { id: existingOTP.id },
+      });
+    } else {
+      newOTP = await prisma.otp.update({
+        data: { otp, verified: false, expiresAt },
+        where: { id: existingOTP.id },
+      });
+    }
   } else {
-    newOTP = await prisma.otp.create({ data: { otp, expiresAt, email } });
+    if (forgotPassword) {
+      newOTP = await prisma.otp.create({
+        data: { otp, expiresAt, forget: true, email },
+      });
+    } else {
+      newOTP = await prisma.otp.create({ data: { otp, expiresAt, email } });
+    }
   }
 
   if (!newOTP) {

@@ -18,7 +18,7 @@ export default function Register(): React.ReactNode {
   async function registerUser(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const reponse = await axios.post('/api/sendMail', user);
+      const reponse = await axios.post('/api/register', user);
       console.log(reponse);
 
       if (reponse.status === 200) {

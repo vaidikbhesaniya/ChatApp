@@ -1,21 +1,29 @@
 "use server";
 
-import { createRegistrationOTP } from "@/actions/otp";
+import { createOTP } from "@/actions/otp";
 import prisma from "@/db";
+import { generateJWT } from "@/lib/auth";
 import sendOTP from "@/utils/emailUtils";
+import { cookies } from "next/headers";
 import otpGenerator from "otp-generator";
 
 export async function registerUser(email: string, password: string) {
-  await prisma.user.create({
+  const newUser = await prisma.user.create({
     data: {
       email,
       password,
       verified: true,
     },
   });
+
+  const token = generateJWT({
+    id: newUser.id,
+    email: newUser.email,
+  });
+  cookies().set("token", token);
 }
 
-export async function sendMail(email: string) {
+export async function sendMail(email: string, forgotPassword?: boolean) {
   // Check for empty email
   if (!email) {
     return { status: 400, message: "Email Empty" };
@@ -25,13 +33,12 @@ export async function sendMail(email: string) {
   const userExists = await prisma.user.findFirst({
     where: { email },
   });
-  if (userExists) {
+  if (userExists && forgotPassword !== true) {
     return {
       status: 400,
       message: "User Already Exists",
     };
   }
-
   // Generate OTP
   const otp: string = otpGenerator.generate(6, {
     lowerCaseAlphabets: false,
@@ -49,10 +56,20 @@ export async function sendMail(email: string) {
       // Send Verification OTP
       const { mailResponse } = await sendOTP(email, otp);
 
+      // Send Forgot Mail
+      if (forgotPassword === true) {
+        const otpId = await createOTP(otp, email, true);
+        return {
+          status: 200,
+          message: "OTP Sent Successfully",
+          otpId,
+        };
+      }
+
       // Create/Update OTP in the DB
       if (mailResponse.accepted) {
         // Create OTP with userId as Foreign Key
-        const otpId = await createRegistrationOTP(otp, email);
+        const otpId = await createOTP(otp, email);
         return {
           status: 200,
           message: "OTP Sent Successfully",

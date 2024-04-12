@@ -27,4 +27,6 @@ model otp {
   createdAt DateTime @default(now())
   expiresAt DateTime
   email     String   @unique
+  forget    Boolean  @default(false)
 }
+

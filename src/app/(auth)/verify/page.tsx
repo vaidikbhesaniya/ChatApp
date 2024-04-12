@@ -11,18 +11,34 @@ export default function Verify() {
   const router = useRouter()
 
   function handleOtpInputChange(e: React.ChangeEvent<HTMLInputElement>, index: number): void {
-    const newOtp: string[] = inputOtp.split('');
-    newOtp[index] = e.target.value;
-    setInputOtp(newOtp.join(''));
+    if (/^[0-9]*$/.test(e.target.value) && e.target.value.length === 1) {
+      const newOtp: string[] = inputOtp.split('');
+      newOtp[index] = e.target.value;
+      setInputOtp(newOtp.join(''));
 
-    if (e.target.value && index < 5) {
-      refs[index + 1].current?.focus();
+      if (e.target.value && index < 5) {
+        refs[index + 1].current?.focus();
+      }
     }
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>, index: number): void {
-    if (event.key === 'Backspace' && !inputOtp[index] && index > 0) {
-      refs[index - 1].current?.focus();
+    if (index === 0) {
+      setInputOtp('');
+    }
+    if (index === 5) {
+      const newOtp: string[] = inputOtp.split('');
+      newOtp[index] = '';
+      setInputOtp(newOtp.join(''));
+    }
+    if (event.key === 'Backspace') {
+      if (!inputOtp[index] && index > 0) {
+        const newOtp: string[] = inputOtp.split('');
+        newOtp[index - 1] = '';
+        setInputOtp(newOtp.join(''));
+
+        refs[index - 1].current?.focus();
+      }
     }
   }
 
@@ -37,11 +53,15 @@ export default function Verify() {
   }, [timer]);
 
   async function handleVerify() {
-    const response = await axios.post('/api/verifyMail', { otp: inputOtp })
+    const response = await axios.post('/api/verify', { otp: inputOtp });
     console.log(response);
 
     if (response.data.status === 200) {
-      router.push('/')
+      if (response.data.verificationType === "password") {
+        router.push("/resetPassword");
+      } else if (response.data.verificationType === "email") {
+        router.push("/");
+      }
     }
   }
 
@@ -55,7 +75,7 @@ export default function Verify() {
             <input
               key={index}
               className="w-[3rem] h-[3rem] lg:w-[4rem] lg:h-[4rem] bg-transparent border-[1px] border-[#BBB] text-center rounded-[10px] outline-[1px] outline-[#2F2F2F] text-[1.4rem] lg:text-[1.7rem]"
-              type="text"
+              type="tel"
               maxLength={1}
               value={inputOtp[index] || ''}
               onChange={(e) => handleOtpInputChange(e, index)}
@@ -63,6 +83,7 @@ export default function Verify() {
               onKeyDown={(e) => handleKeyDown(e, index)}
               autoFocus={index === 0}
               required
+              pattern="[0-9]*"
             />
           ))}
         </div>
