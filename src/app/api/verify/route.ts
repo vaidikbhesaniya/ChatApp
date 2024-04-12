@@ -7,18 +7,21 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   const { otp } = await request.json();
   if (!otp) {
-    return NextResponse.json({ message: "Invalid OTP" });
+    return NextResponse.json({ status: 400, message: "Invalid OTP" });
   }
 
   if (cookies().get("otpToken")) {
     const otpToken = cookies().get("otpToken");
     if (!otpToken || !otpToken.value) {
-      return NextResponse.json({ message: "Invalid OTP" });
+      return NextResponse.json({ status: 400, message: "Invalid OTP" });
     }
 
     const decodedOTPToken = verifyJWT(otpToken.value);
     if (decodedOTPToken.status !== 200) {
-      return NextResponse.json(decodedOTPToken.message);
+      return NextResponse.json({
+        status: 400,
+        message: decodedOTPToken.message,
+      });
     }
 
     const existingOTP = await prisma.otp.findFirst({
@@ -28,21 +31,19 @@ export async function POST(request: NextRequest) {
     });
 
     if (!existingOTP) {
-      return NextResponse.json({ message: "OTP Not Found" });
+      return NextResponse.json({ status: 400, message: "OTP Not Found" });
     }
     if (existingOTP.expiresAt < new Date()) {
-      return NextResponse.json({ message: "OTP Expired" });
+      return NextResponse.json({ status: 400, message: "OTP Expired" });
     }
     if (otp !== existingOTP.otp) {
-      return NextResponse.json({ message: "Incorrect OTP" });
+      return NextResponse.json({ status: 400, message: "Incorrect OTP" });
     }
 
     await prisma.otp.update({
       data: { forget: false, verified: true },
       where: { id: existingOTP.id },
     });
-
-    cookies().delete("otpToken");
 
     return NextResponse.json({
       status: 200,
