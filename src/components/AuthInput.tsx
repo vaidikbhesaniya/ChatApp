@@ -31,11 +31,11 @@ export default function AuthInput({ type, placeholder, value, setValue, name }: 
     >
       <label
         htmlFor={name}
-        className='flex gap-2 items-center border-[2px] border-[#2F2F2F] rounded-[10px] p-[1rem] bg-[#F2F2F2]'
+        className='flex gap-2 items-center border-[2px] border-[#2F2F2F] rounded-[10px] p-[1rem] lg:p-[0.8rem] bg-[#F2F2F2]'
       >
         <Image
           src={type === "email" ? email : password} alt={type}
-          className='h-[1.4rem] w-[1.4rem]'
+          className='h-[1.4rem] w-[1.4rem] lg:h-[1.1rem] lg:w-[1.1rem]'
         />
         <input
           ref={inputRef}
@@ -44,7 +44,7 @@ export default function AuthInput({ type, placeholder, value, setValue, name }: 
           onChange={handleChange}
           placeholder={placeholder}
           required
-          className='bg-transparent outline-none text-[1.3rem] authInput'
+          className='bg-transparent outline-none text-[1.3rem] lg:text-[1.2rem] authInput w-[100%]'
           id={name}
           name={name}
           autoComplete='off'

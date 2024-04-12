@@ -3,10 +3,7 @@
 @tailwind utilities;
 
 .authBackground {
-  min-width: 100%;
-  min-height: 100vh;
   background: url("../assets/AuthBG.png");
-  background-position: center;
 }
 
 .inputContainer {
