@@ -64,7 +64,7 @@ export default function Register(): React.ReactNode {
           >Register
           </button>
         </form>
-        <span>Already have an Account? <Link href="/login" className='text-[#287ac3] hover:text-[#2aa3ff]'>Login Now</Link></span>
+        <span className='text-[0.9rem]'>Already have an Account? <Link href="/login" className='text-[#287ac3] hover:text-[#2aa3ff]'>Login Now</Link></span>
       </div>
     </div>
   )

@@ -56,3 +56,16 @@
 .button {
   @apply bg-[#ffd438] p-[1rem] lg:py-[0.5rem] rounded-[10px] text-[#2F2F2F] uppercase font-semibold tracking-[3px] text-[1.5rem] lg:text-[1.1rem] border-[2px] border-[#2F2F2F] shadow-[0_5px_0_0_#2F2F2F] hover:bg-[#fab005] outline-none mb-[10px];
 }
+
+.scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(130, 130, 130, 0.5);
+  border-radius: 5px;
+}

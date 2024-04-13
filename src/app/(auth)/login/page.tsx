@@ -49,7 +49,7 @@ export default function Login(): React.ReactNode {
           >login
           </button>
         </form>
-        <span>Don&lsquo;t have an account? <Link href="/register" className='text-[#287ac3] hover:text-[#2aa3ff]'>Register Now</Link></span>
+        <span className='text-[0.9rem]'>Don&lsquo;t have an account? <Link href="/register" className='text-[#287ac3] hover:text-[#2aa3ff]'>Register Now</Link></span>
       </div>
     </div>
   )

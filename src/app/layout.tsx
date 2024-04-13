@@ -12,7 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${FontStore.getState().poppins} bg-[#181818]`}>{children}</body>
+      <body className={`${FontStore.getState().poppins} bg-gray-900`}>{children}</body>
     </html>
   )
 }
